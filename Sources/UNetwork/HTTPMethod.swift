@@ -1,6 +1,6 @@
 //
 //  HTTPMethod.swift
-//  Network
+//  UNetwork
 //
 //  Created by Ignat Urbanovich on 17/08/2025.
 //

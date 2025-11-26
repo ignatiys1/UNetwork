@@ -1,6 +1,6 @@
 //
 //  APIClient.swift
-//  Network
+//  UNetwork
 //
 //  Created by Ignat Urbanovich on 12/08/2025.
 //
@@ -25,7 +25,7 @@ struct APIClient {
     /// Dispatches an URLRequest and returns a publisher
     /// - Parameter request: URLRequest
     /// - Returns: A publisher with the provided decoded data or an error
-    func dispatch<Response: Decodable>(request: URLRequest) -> AnyPublisher<Response, NetworkRequestError> {
+    func dispatch<Response: Decodable>(request: URLRequest) -> AnyPublisher<Response, UNetworkRequestError> {
         return urlSession
             .dataTaskPublisher(for: request)
         // Map on Request response
@@ -53,7 +53,7 @@ private extension APIClient {
     /// Parses a HTTP StatusCode and returns a proper error
     /// - Parameter statusCode: HTTP status code
     /// - Returns: Mapped Error
-    private func httpError(_ statusCode: Int) -> NetworkRequestError {
+    private func httpError(_ statusCode: Int) -> UNetworkRequestError {
         switch statusCode {
         case 400: return .badRequest
         case 401: return .unauthorized
@@ -67,14 +67,14 @@ private extension APIClient {
     }
     /// Parses URLSession Publisher errors and return proper ones
     /// - Parameter error: URLSession publisher error
-    /// - Returns: Readable NetworkRequestError
-    private func handleError(_ error: Error) -> NetworkRequestError {
+    /// - Returns: Readable UNetworkRequestError
+    private func handleError(_ error: Error) -> UNetworkRequestError {
         switch error {
         case is Swift.DecodingError:
             return .decodingError
         case let urlError as URLError:
             return .urlSessionFailed(urlError)
-        case let error as NetworkRequestError:
+        case let error as UNetworkRequestError:
             return error
         default:
             return .unknownError

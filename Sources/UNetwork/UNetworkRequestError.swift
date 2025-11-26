@@ -1,13 +1,13 @@
 //
-//  NetworkRequestError.swift
-//  Network
+//  UNetworkRequestError.swift
+//  UNetwork
 //
 //  Created by Ignat Urbanovich on 17/08/2025.
 //
 
 import Foundation
 
-public enum NetworkRequestError: LocalizedError, Equatable {
+public enum UNetworkRequestError: LocalizedError, Equatable {
     case invalidRequest
     case badRequest
     case unauthorized

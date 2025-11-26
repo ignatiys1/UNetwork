@@ -26,14 +26,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FFE767EA2E4B8FC200A3F1D9 /* Network */ = {
+		FFE767EA2E4B8FC200A3F1D9 /* UNetwork */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Network;
+			path = UNetwork;
 			sourceTree = "<group>";
 		};
-		FFE767F72E4B8FC200A3F1D9 /* NetworkTests */ = {
+		FFE767F72E4B8FC200A3F1D9 /* UNetworkTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NetworkTests;
+			path = UNetworkTests;
 			sourceTree = "<group>";
 		};
 		FFE768122E4B909C00A3F1D9 /* Example */ = {
@@ -62,6 +62,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF20742C2ED72B9F00E6A113 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FFE768122E4B909C00A3F1D9 /* Example */,
+				FFE767EA2E4B8FC200A3F1D9 /* UNetwork */,
+				FFE767F72E4B8FC200A3F1D9 /* UNetworkTests */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 		FFA6DA8B2E521CA40051EC51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -72,9 +82,7 @@
 		FFE767DE2E4B8FC200A3F1D9 = {
 			isa = PBXGroup;
 			children = (
-				FFE768122E4B909C00A3F1D9 /* Example */,
-				FFE767EA2E4B8FC200A3F1D9 /* Network */,
-				FFE767F72E4B8FC200A3F1D9 /* NetworkTests */,
+				FF20742C2ED72B9F00E6A113 /* Sources */,
 				FFA6DA8B2E521CA40051EC51 /* Frameworks */,
 				FFE767E92E4B8FC200A3F1D9 /* Products */,
 			);
@@ -116,7 +124,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FFE767EA2E4B8FC200A3F1D9 /* Network */,
+				FFE767EA2E4B8FC200A3F1D9 /* UNetwork */,
 				FFE768122E4B909C00A3F1D9 /* Example */,
 			);
 			name = UNetwork;
@@ -140,7 +148,7 @@
 				FFE767F62E4B8FC200A3F1D9 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				FFE767F72E4B8FC200A3F1D9 /* NetworkTests */,
+				FFE767F72E4B8FC200A3F1D9 /* UNetworkTests */,
 			);
 			name = UNetworkTests;
 			packageProductDependencies = (

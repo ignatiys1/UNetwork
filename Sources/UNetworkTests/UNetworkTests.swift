@@ -1,14 +1,14 @@
 //
-//  NetworkTests.swift
-//  NetworkTests
+//  UNetworkTests.swift
+//  UNetworkTests
 //
 //  Created by Ignat Urbanovich on 12/08/2025.
 //
 
 import Testing
-@testable import Network
+@testable import UNetwork
 
-struct NetworkTests {
+struct UNetworkTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

@@ -1,6 +1,6 @@
 //
-//  NetworkService.swift
-//  Network
+//  UNetworkService.swift
+//  UNetwork
 //
 //  Created by Ignat Urbanovich on 12/08/2025.
 //
@@ -12,9 +12,9 @@ public protocol ProvidesToken {
     var token: String { get }
 }
 
-public protocol NetworkService: AnyObject {
+public protocol UNetworkService: AnyObject {
     
-    associatedtype Configs: NetworkConfigs
+    associatedtype Configs: UNetworkConfigs
     
     associatedtype PathContext = Void
     associatedtype Response: Decodable
@@ -23,12 +23,12 @@ public protocol NetworkService: AnyObject {
     var httpHeader: [String: String] { get }
     var tokenProvider: ProvidesToken? { get }
 
-    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, NetworkRequestError>
+    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
     func endpoint(_ context: PathContext) -> String
 }
 
-public extension NetworkService {
-    private typealias RequestPublisher = AnyPublisher<Response, NetworkRequestError>
+public extension UNetworkService {
+    private typealias RequestPublisher = AnyPublisher<Response, UNetworkRequestError>
     
     var method: HTTPMethod { .get }
     var httpHeader: [String: String] {
@@ -51,9 +51,9 @@ public extension NetworkService {
             .merging(httpHeader, uniquingKeysWith: { $1 })
     }
     
-    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, NetworkRequestError> {
+    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
         guard let urlRequest = getRequest(with: params, pathContext: pathContext) else {
-            return Fail(outputType: Response.self, failure: NetworkRequestError.badRequest)
+            return Fail(outputType: Response.self, failure: UNetworkRequestError.badRequest)
                 .eraseToAnyPublisher()
         }
         

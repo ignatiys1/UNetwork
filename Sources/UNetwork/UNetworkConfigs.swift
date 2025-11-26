@@ -1,11 +1,11 @@
 //
-//  NetworkConfigs.swift
-//  Network
+//  UNetworkConfigs.swift
+//  UNetwork
 //
 //  Created by Ignat Urbanovich on 12/08/2025.
 //
 
-public protocol NetworkConfigs {
+public protocol UNetworkConfigs {
     static var baseURLString: String { get }
     static var commonHTTPHeader: [String: String] { get }
     static var tokenProvider: ProvidesToken? { get }
