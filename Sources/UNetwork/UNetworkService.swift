@@ -24,6 +24,7 @@ public protocol UNetworkService: AnyObject {
     var tokenProvider: ProvidesToken? { get }
 
     func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
+    func sendRequest(pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
     func endpoint(_ context: PathContext) -> String
 }
 
@@ -51,6 +52,10 @@ public extension UNetworkService {
             .merging(httpHeader, uniquingKeysWith: { $1 })
     }
     
+    func sendRequest(pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
+        sendRequest(with: [:], pathContext: pathContext)
+    }
+    
     func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
         guard let urlRequest = getRequest(with: params, pathContext: pathContext) else {
             return Fail(outputType: Response.self, failure: UNetworkRequestError.badRequest)
@@ -74,7 +79,10 @@ public extension UNetworkService {
     }
     
     private func requestBodyFrom(_ params: [String: Any]) -> Data? {
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+        guard
+            !params.isEmpty,
+            let httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+        else {
             return nil
         }
         return httpBody
