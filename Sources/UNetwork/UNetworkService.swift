@@ -23,8 +23,18 @@ public protocol UNetworkService: AnyObject {
     var httpHeader: [String: String] { get }
     var tokenProvider: ProvidesToken? { get }
 
-    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
+    func sendRequest(with bodyParams: [String: Any], pathContext: PathContext, queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError>
+    
+    func sendRequest(pathContext: PathContext, queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError>
+    func sendRequest(with bodyParams: [String: Any], queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError>
+    func sendRequest(with bodyParams: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
+    
+    func sendRequest(queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError>
+    func sendRequest(with bodyParams: [String: Any]) -> AnyPublisher<Response, UNetworkRequestError>
     func sendRequest(pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError>
+    
+    func sendRequest() -> AnyPublisher<Response, UNetworkRequestError>
+
     func endpoint(_ context: PathContext) -> String
 }
 
@@ -52,12 +62,37 @@ public extension UNetworkService {
             .merging(httpHeader, uniquingKeysWith: { $1 })
     }
     
-    func sendRequest(pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
-        sendRequest(with: [:], pathContext: pathContext)
+    func sendRequest(pathContext: PathContext, queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError> {
+        sendRequest(with: [:], pathContext: pathContext, queryParams: queryParams)
     }
     
-    func sendRequest(with params: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
-        guard let urlRequest = getRequest(with: params, pathContext: pathContext) else {
+    func sendRequest(with bodyParams: [String: Any], queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError> where PathContext == Void  {
+        sendRequest(with: [:], pathContext: (), queryParams: queryParams)
+
+    }
+    
+    func sendRequest(with bodyParams: [String: Any], pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
+        sendRequest(with: bodyParams, pathContext: pathContext, queryParams: [:])
+    }
+    
+    func sendRequest(queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError> where PathContext == Void  {
+        sendRequest(with: [:], pathContext: (), queryParams: queryParams)
+    }
+    
+    func sendRequest(with bodyParams: [String: Any]) -> AnyPublisher<Response, UNetworkRequestError> where PathContext == Void {
+        sendRequest(with: bodyParams, pathContext: (), queryParams: [:])
+    }
+    
+    func sendRequest(pathContext: PathContext) -> AnyPublisher<Response, UNetworkRequestError> {
+        sendRequest(with: [:], pathContext: pathContext, queryParams: [:])
+    }
+    
+    func sendRequest() -> AnyPublisher<Response, UNetworkRequestError> where PathContext == Void {
+        sendRequest(with: [:], pathContext: (), queryParams: [:])
+    }
+    
+    func sendRequest(with bodyParams: [String: Any], pathContext: PathContext, queryParams: [String: String?]) -> AnyPublisher<Response, UNetworkRequestError> {
+        guard let urlRequest = getRequest(with: bodyParams, pathContext: pathContext, queryParams: queryParams) else {
             return Fail(outputType: Response.self, failure: UNetworkRequestError.badRequest)
                 .eraseToAnyPublisher()
         }
@@ -67,18 +102,19 @@ public extension UNetworkService {
         return requestPublisher.eraseToAnyPublisher()
     }
     
-    private func getRequest(with params: [String: Any], pathContext: PathContext) -> URLRequest? {
+    private func getRequest(with params: [String: Any], pathContext: PathContext, queryParams: [String: String?]) -> URLRequest? {
         guard var urlComponents = URLComponents(string: Configs.baseURLString) else { return nil }
         urlComponents.path = "\(urlComponents.path)\(endpoint(pathContext))"
+        urlComponents.queryItems = requestQuery(from: Configs.commonQueryParams.merging(queryParams) { $1 })
         guard let finalURL = urlComponents.url else { return nil }
         var request = URLRequest(url: finalURL)
         request.httpMethod = method.rawValue
-        request.httpBody = requestBodyFrom(params)
+        request.httpBody = requestBody(from: params)
         request.allHTTPHeaderFields = assembleHTTPHeader
         return request
     }
     
-    private func requestBodyFrom(_ params: [String: Any]) -> Data? {
+    private func requestBody(from params: [String: Any]) -> Data? {
         guard
             !params.isEmpty,
             let httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
@@ -87,4 +123,9 @@ public extension UNetworkService {
         }
         return httpBody
     }
+    
+    private func requestQuery(from params: [String: String?]) -> [URLQueryItem] {
+        params.map { URLQueryItem(name: $0.key, value: $0.value) }
+    }
+
 }

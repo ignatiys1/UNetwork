@@ -8,5 +8,6 @@
 public protocol UNetworkConfigs {
     static var baseURLString: String { get }
     static var commonHTTPHeader: [String: String] { get }
+    static var commonQueryParams: [String: String?] { get }
     static var tokenProvider: ProvidesToken? { get }
 }
