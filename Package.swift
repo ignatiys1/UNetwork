@@ -11,11 +11,20 @@ let package = Package(
             name: "UNetwork",
             targets: ["UNetwork"]
         ),
+        .library(
+            name: "UNetworkMocks",
+            targets: ["UNetworkMocks"]
+        )
     ],
     targets: [
         .target(
             name: "UNetwork",
             path: "Sources/UNetwork"
+        ),
+        .target(
+            name: "UNetworkMocks",
+            dependencies: ["UNetwork"],
+            path: "Sources/Mocks"
         )
     ]
 )
